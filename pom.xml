@@ -32,7 +32,13 @@
   <modules>
     <module>springpr-parent-bom</module>
   </modules>
-  
+
+  <scm>
+    <connection>scm:git:https://github.com/yangli136/springpr-parent.git</connection>
+    <developerConnection>scm:git:https://github.com/yangli136/springpr-parent.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
   <!-- common build properties -->
   <properties>
     <revision>3.3.2.21.3-SNAPSHOT</revision>
