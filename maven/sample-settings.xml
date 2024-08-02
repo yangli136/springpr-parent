@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+
+  <!-- Most common configurations to build project locally in a coorprate environment -->
+  <!-- localRepository
+   | The path to the local repository maven will use to store artifacts.
+  -->
+  <localRepository>/path-to-local-repositories/repositories</localRepository>
+
+  <!-- proxies
+   | This is a list of proxies which can be used on this machine to connect to the network.
+   | Unless otherwise specified (by system property or command-line switch), the first proxy
+   | specification in this list marked as active will be used.
+   |-->
+  <proxies>
+    <proxy>
+      <id>optional</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <username>xxx</username>
+      <password>yyy</password>
+      <host>abc.def.com</host>
+      <port>8080</port>
+      <nonProxyHosts>127.0.0.1|localhost</nonProxyHosts>
+    </proxy>
+      <proxy>
+      <id>optional</id>
+      <active>true</active>
+      <protocol>https</protocol>
+      <username>xxx</username>
+      <password>yyy</password>
+      <host>abc.def.com</host>
+      <port>8080</port>
+      <nonProxyHosts>127.0.0.1|localhost</nonProxyHosts>
+    </proxy>
+  </proxies>
+
+  <!-- mirrors
+   | This is a list of mirrors to be used in downloading artifacts from remote repositories.
+   |
+   | It works like this: a POM may declare a repository to use in resolving certain artifacts.
+   | However, this repository may have problems with heavy traffic at times, so people have mirrored
+   | it to several places.
+   |
+   | That repository definition will have a unique id, so we can create a mirror reference for that
+   | repository, to be used as an alternate download site. The mirror site will be the preferred
+   | server for that repository.
+   |-->
+  <mirrors>
+    <!-- mirror
+     | Specifies a repository mirror site to use instead of a given repository. The repository that
+     | this mirror serves has an ID that matches the mirrorOf element of this mirror. IDs are used
+     | for inheritance and direct lookup purposes, and must be unique across the set of mirrors.
+     |
+    <mirror>
+      <id>mirrorId</id>
+      <mirrorOf>repositoryId</mirrorOf>
+      <name>Human Readable Name for this Mirror.</name>
+      <url>http://my.repository.com/repo/path</url>
+    </mirror>
+     -->
+    <mirror>
+      <id>maven-default-http-blocker</id>
+      <mirrorOf>external:http:*</mirrorOf>
+      <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
+      <url>http://0.0.0.0/</url>
+      <blocked>true</blocked>
+    </mirror>
+  </mirrors>
+
+  <!-- profiles
+   | This is a list of profiles which can be activated in a variety of ways, and which can modify
+   | the build process. Profiles provided in the settings.xml are intended to provide local machine-
+   | specific paths and repository locations which allow the build to work in the local environment.
+   |
+   | NOTE: For profiles defined in the settings.xml, you are restricted to specifying only artifact
+   |       repositories, plugin repositories, and free-form properties to be used as configuration
+   |       variables for plugins in the POM.
+   |
+   |-->
+  <profiles>
+    <profile>
+      <id>local-build</id>
+
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+ 
+      <distributionManagement>
+        <repository>
+          <id>corporate</id>
+          <url>https://abc.def.com/corporate/</url>
+        </repository>
+        <snapshotRepository>
+          <id>snapshots</id>
+          <url>https://abe.def.com/snapshots/</url>
+        </snapshotRepository>
+      </distributionManagement>
+
+      <repositories>
+        <!-- amex repositories -->
+        <repository>
+          <id>corporate</id>
+          <url>https://artifactory.abc.def.com/releases/</url>
+        </repository>
+        <repository>
+          <id>snapshots</id>
+          <url>https://artifactory.abc.def.com/snapshots/</url>
+        </repository>
+      </repositories>
+  
+      <pluginRepositories>
+        <pluginRepository>
+          <id>corporate</id>
+          <url>https://artifactory.abc.def.com/releases/</url>
+        </pluginRepository>
+      </pluginRepositories>
+
+   </profile> 
+  </profiles>
+
+  <!-- activeProfiles
+   | List of profiles that are active for all builds.
+   |
+  <activeProfiles>
+    <activeProfile>alwaysActiveProfile</activeProfile>
+    <activeProfile>anotherAlwaysActiveProfile</activeProfile>
+  </activeProfiles>
+  -->
+</settings>
