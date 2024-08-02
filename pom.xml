@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-dependencies</artifactId>
+    <version>3.3.2</version>
+  </parent>
+
+  <groupId>com.aexp.springpr</groupId>
+  <artifactId>springpr-parent</artifactId>
+  <version>${revision}</version>
+  <packaging>pom</packaging>
+
+  <name>Paved Road for Spring Boot Based Applications - Parent Root</name>
+  <description>See README.md</description>
+
+  <!-- common build environment settings -->
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://opensource.aexp.com/LICENSE.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>springpr136@gmai.com</name>
+    </developer>
+  </developers>
+
+  <modules>
+    <module>springpr-parent-bom</module>
+  </modules>
+  
+  <!-- common build properties -->
+  <properties>
+    <revision>3.3.2.21.3-SNAPSHOT</revision>
+
+    <spring-boot.version>3.3.2</spring-boot.version>
+    <springpr.app.id>${project.artifactId}</springpr.app.id>
+
+    <maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
+    <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+
+    <spotless-maven-plugin.skip>false</spotless-maven-plugin.skip>
+  </properties>
+
+  <repositories>
+    <!-- maven2 -->
+    <repository>
+      <id>maven2</id>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </repository>
+
+    <repository>
+      <id>spring release</id>
+      <url>https://repo.spring.io/artifactory/release/</url>
+    </repository>
+    <repository>
+      <id>spring milestone</id>
+      <url>https://repo.spring.io/artifactory/milestone/</url>
+    </repository>
+    <repository>
+      <id>spring plugins release</id>
+      <url>https://repo.spring.io/artifactory/plugins-release/</url>
+    </repository>
+    <repository>
+      <id>spring plugins milestone</id>
+      <url>https://repo.spring.io/artifactory/plugins-milestone/</url>
+    </repository>
+
+    <!-- Spring libs Repositories -->
+    <repository>
+      <id>spring libs release</id>
+      <url>https://repo.spring.io/artifactory/libs-release/</url>
+    </repository>
+    <repository>
+      <id>spring libs milestone</id>
+      <url>https://repo.spring.io/artifactory/libs-milestone/</url>
+    </repository>
+    <repository>
+      <id>spring libs private release</id>
+      <url>https://repo.spring.io/artifactory/libs-private-release/</url>
+    </repository>
+  </repositories>
+
+  <profiles>
+    <profile>
+      <id>lib</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <!-- resolve Maven variables -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>flatten-maven-plugin</artifactId>
+            <version>${flatten-maven-plugin.version}</version>
+            <configuration>
+              <updatePomFile>true</updatePomFile>
+              <flattenMode>resolveCiFriendliesOnly</flattenMode>
+            </configuration>
+            <executions>
+              <execution>
+                <id>flatten</id>
+                <goals>
+                  <goal>flatten</goal>
+                </goals>
+                <phase>process-resources</phase>
+              </execution>
+              <execution>
+                <id>flatten.clean</id>
+                <goals>
+                  <goal>clean</goal>
+                </goals>
+                <phase>clean</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- format markdown files -->
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <version>${spotless-maven-plugin.version}</version>
+            <configuration>
+              <skip>${spotless-maven-plugin.skip}</skip>
+              <formats>
+                <!-- you can define as many formats as you want, each is independent -->
+                <format>
+                  <!-- define the files to apply to -->
+                  <includes>
+                    <include>*.md</include>
+                    <include>.gitignore</include>
+                  </includes>
+                  <!-- define the steps to apply to those files -->
+                  <trimTrailingWhitespace></trimTrailingWhitespace>
+                  <endWithNewline></endWithNewline>
+                  <indent>
+                    <spaces>true</spaces>
+                    <spacesPerTab>4</spacesPerTab>
+                  </indent>
+                </format>
+              </formats>
+              <!-- define a language-specific format -->
+              <pom>
+                <!-- These are the defaults, you can override if you want -->
+                <includes>
+                  <include>pom.xml</include>
+                </includes>
+                <sortPom>
+                  <encoding>UTF-8</encoding>
+                  <!-- The encoding of the pom files -->
+                  <lineSeparator>${line.separator}</lineSeparator>
+                  <!-- line separator to use -->
+                  <expandEmptyElements>true</expandEmptyElements>
+                  <!-- Should empty elements be expanded-->
+                  <spaceBeforeCloseEmptyElement>false</spaceBeforeCloseEmptyElement>
+                  <!-- Should a space be added inside self-closing elements-->
+                  <keepBlankLines>true</keepBlankLines>
+                  <!-- Keep empty lines -->
+                  <nrOfIndentSpace>2</nrOfIndentSpace>
+                  <!-- Indentation -->
+                  <indentBlankLines>false</indentBlankLines>
+                  <!-- Should empty lines be indented -->
+                  <indentSchemaLocation>false</indentSchemaLocation>
+                  <!-- Should schema locations be indended -->
+                  <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
+                  <!-- Sort order of elements: https://github.com/Ekryd/sortpom/wiki/PredefinedSortOrderProfiles-->
+                  <sortOrderFile></sortOrderFile>
+                  <!-- Custom sort order of elements: https://raw.githubusercontent.com/Ekryd/sortpom/master/sorter/src/main/resources/custom_1.xml -->
+                  <sortDependencies></sortDependencies>
+                  <!-- Sort dependencies: https://github.com/Ekryd/sortpom/wiki/SortDependencies-->
+                  <sortDependencyExclusions></sortDependencyExclusions>
+                  <!-- Sort dependency exclusions: https://github.com/Ekryd/sortpom/wiki/SortDependencies-->
+                  <sortPlugins></sortPlugins>
+                  <!-- Sort plugins: https://github.com/Ekryd/sortpom/wiki/SortPlugins -->
+                  <sortProperties>false</sortProperties>
+                  <!-- Sort properties -->
+                  <sortModules>false</sortModules>
+                  <!-- Sort modules -->
+                  <sortExecutions>false</sortExecutions>
+                  <!-- Sort plugin executions -->
+                </sortPom>
+              </pom>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
