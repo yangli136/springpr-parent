@@ -1,7 +1,7 @@
 ## License
 
 Any contributions made under this project will be governed by the
-[Apache License 2.0](./LICENSE.txt).
+[Apache License 2.0](https://opensource.aexp.com/LICENSE.txt).
 
 ## Contributing
 
