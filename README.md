@@ -12,7 +12,3 @@ Agreement to American Express and to recipients of software distributed by Ameri
 reserve all right, title, and interest, if any, in and to Your Contributions. Please
 [fill out the Agreement](https://cla-assistant.io/americanexpress/springpr-parent).
 
-## Code of Conduct
-
-This project adheres to the [American Express Community Guidelines](./CODE_OF_CONDUCT.md). By
-participating, you are expected to honor these guidelines.
