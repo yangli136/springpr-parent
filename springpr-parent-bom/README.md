@@ -16,7 +16,7 @@
 - pluginRepositories
 
 - Source code encoding
-- 
+-
 ## logging over slf4j and log4j2
 - removed logback dependencies
 - removed Apache commons-logging dependencies
