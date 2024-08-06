@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.aexp.springpr</groupId>
+    <artifactId>springpr-parent-bom</artifactId>
+    <version>${revision}</version>
+  </parent>
+
+  <artifactId>springpr-parent-pom</artifactId>
+  <packaging>pom</packaging>
+
+  <name>SpringPR Maven Parent POM</name>
+  <description>See README.md</description>
+
+  <modules>
+    <module>springpr-server-parent-pom</module>
+  </modules>
+
+  <properties>
+    <java.release.version>21</java.release.version>
+    <java.compatible.versions>[21, 23)</java.compatible.versions>
+    <maven.compatible.versions>[3.6.3, 4.0.0)</maven.compatible.versions>
+    <maven.compiler.source>${java.release.version}</maven.compiler.source>
+    <maven.compiler.target>${java.release.version}</maven.compiler.target>
+
+    <flag.allowSnapshots>true</flag.allowSnapshots>
+
+    <!-- Maven Plugins not managed by spring-boot-dependencies -->
+    <wiremock.version>3.9.1</wiremock.version>
+    <google-java-format.version>1.23.0</google-java-format.version>
+    <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
+
+    <opentelemetry-bom.version>1.40.0</opentelemetry-bom.version>
+    <opentelemetry-instrumentation-bom-alpha.version>2.6.0-alpha</opentelemetry-instrumentation-bom-alpha.version>
+
+    <git-commit-id-maven-plugin.skip>true</git-commit-id-maven-plugin.skip>
+    <spotless-maven-plugin.skip>false</spotless-maven-plugin.skip>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.opentelemetry</groupId>
+        <artifactId>opentelemetry-bom</artifactId>
+        <version>${opentelemetry-bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.opentelemetry.instrumentation</groupId>
+        <artifactId>opentelemetry-instrumentation-bom-alpha</artifactId>
+        <version>${opentelemetry-instrumentation-bom-alpha.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- re-defined -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+
+    <!-- JSON -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-json</artifactId>
+    </dependency>
+
+    <!-- logging -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
+    <!-- log JSON generating layout -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-layout-template-json</artifactId>
+    </dependency>
+
+    <!-- AspectJ -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+
+    <!-- method Level Validation -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <!-- Cache -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+    </dependency>
+
+    <!-- Retry -->
+    <dependency>
+      <groupId>org.springframework.retry</groupId>
+      <artifactId>spring-retry</artifactId>
+    </dependency>
+
+    <!-- production ready -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- Micrometer Registries -->
+    <!-- for local metrics page -->
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-otlp</artifactId>
+    </dependency>
+    <!-- 
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-jmx</artifactId>
+    </dependency>
+    -->
+
+    <!-- opentelemetry -->
+    <dependency>
+      <groupId>io.opentelemetry.instrumentation</groupId>
+      <artifactId>opentelemetry-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.opentelemetry.instrumentation</groupId>
+      <artifactId>opentelemetry-log4j-context-data-2.17-autoconfigure</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-tracing-bridge-otel</artifactId>
+    </dependency>
+
+    <!-- tests -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Run JUnit outside IDE -->
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- mock -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.wiremock</groupId>
+      <artifactId>wiremock</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- asynchronous systems testing -->
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- reactive programming -->
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Testcontainers -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-testcontainers</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- devtool -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Spring configuration metadata for contextual help in IDE -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.xml</include>
+          <include>**/*.yaml</include>
+          <include>**/*.yml</include>
+          <include>**/*.txt</include>
+          <include>**/*.cql</include>
+          <include>**/*.sql</include>
+        </includes>
+      </resource>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/config</directory>
+        <includes>
+          <include>**/*.jks</include>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <filtering>true</filtering>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-maven-plugin</artifactId>
+        <version>${lombok-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>delombok</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules>
+            <banDuplicatePomDependencyVersions></banDuplicatePomDependencyVersions>
+            <requireJavaVersion>
+              <version>${java.compatible.versions}</version>
+            </requireJavaVersion>
+            <requireMavenVersion>
+              <version>${maven.compatible.versions}</version>
+            </requireMavenVersion>
+            <requireProperty>
+              <property>spring-boot.version</property>
+              <message>spring-boot.version should be defined!</message>
+              <regex>.*\d.*</regex>
+              <regexMessage>The spring-boot.version must contain at least one digit.</regexMessage>
+            </requireProperty>
+            <bannedPlugins>
+              <!-- will only display a warning but does not fail the build. -->
+              <level>WARN</level>
+              <excludes>
+                <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>
+              </excludes>
+              <message>Please consider using the maven-invoker-plugin (http://maven.apache.org/plugins/maven-invoker-plugin/)!</message>
+            </bannedPlugins>
+            <banDynamicVersions>
+              <ignores>
+                <ignore>package.to.be.ignored</ignore>
+              </ignores>
+              <allowSnapshots>${flag.allowSnapshots}</allowSnapshots>
+              <excludedScopes>test</excludedScopes>
+            </banDynamicVersions>
+            <requireFilesExist>
+              <files>
+                <file>${project.basedir}/.mvn/jvm.config</file>
+                <file>${project.basedir}/lombok.config</file>
+              </files>
+            </requireFilesExist>
+          </rules>
+        </configuration>
+        <executions>
+          <execution>
+            <id>enforce-rules</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless-maven-plugin.version}</version>
+        <configuration>
+          <!-- optional: limit format enforcement to just the files changed by this feature branch
+        <ratchetFrom>origin/main</ratchetFrom> -->
+          <skip>${spotless-maven-plugin.skip}</skip>
+          <formats>
+            <!-- you can define as many formats as you want, each is independent -->
+            <format>
+              <!-- define the files to apply to -->
+              <includes>
+                <include>.gitignore</include>
+                <include>Jenkinsfile</include>
+                <include>jvm.config</include>
+                <include>**/*.md</include>
+                <include>**/*.xml</include>
+                <include>**/*.yaml</include>
+                <include>**/*.yml</include>
+              </includes>
+              <excludes>
+                <exclude>pom.xml</exclude>
+                <exclude>.flattened-pom.xml</exclude>
+                <exclude>**/target/**/*</exclude>
+                <exclude>.git/**</exclude>
+                <exclude>.openshift/**</exclude>
+                <exclude>setup/**</exclude>
+              </excludes>
+
+              <!-- define the steps to apply to those files -->
+              <trimTrailingWhitespace></trimTrailingWhitespace>
+              <endWithNewline></endWithNewline>
+              <indent>
+                <spaces>true</spaces>
+                <spacesPerTab>4</spacesPerTab>
+              </indent>
+
+              <replace>
+                <!-- specify replacements using search and replace -->
+                <name>Say Hello to Mars</name>
+                <search>Mars</search>
+                <replacement>Mars</replacement>
+              </replace>
+
+              <replaceRegex>
+                <!-- specify replacements using regex match and replace -->
+                <name>Say Hello to Mars from Regex</name>
+                <searchRegex>(Hello) W[a-z]{3}d</searchRegex>
+                <replacement>$1 Mars</replacement>
+              </replaceRegex>
+            </format>
+          </formats>
+          <!-- define a language-specific format -->
+          <pom>
+            <!-- These are the defaults, you can override if you want -->
+            <includes>
+              <include>pom.xml</include>
+            </includes>
+            <sortPom>
+              <encoding>UTF-8</encoding>
+              <!-- The encoding of the pom files -->
+              <lineSeparator>${line.separator}</lineSeparator>
+              <!-- line separator to use -->
+              <expandEmptyElements>true</expandEmptyElements>
+              <!-- Should empty elements be expanded-->
+              <spaceBeforeCloseEmptyElement>false</spaceBeforeCloseEmptyElement>
+              <!-- Should a space be added inside self-closing elements-->
+              <keepBlankLines>true</keepBlankLines>
+              <!-- Keep empty lines -->
+              <nrOfIndentSpace>2</nrOfIndentSpace>
+              <!-- Indentation -->
+              <indentBlankLines>false</indentBlankLines>
+              <!-- Should empty lines be indented -->
+              <indentSchemaLocation>false</indentSchemaLocation>
+              <!-- Should schema locations be indended -->
+              <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
+              <!-- Sort order of elements: https://github.com/Ekryd/sortpom/wiki/PredefinedSortOrderProfiles-->
+              <sortOrderFile></sortOrderFile>
+              <!-- Custom sort order of elements: https://raw.githubusercontent.com/Ekryd/sortpom/master/sorter/src/main/resources/custom_1.xml -->
+              <sortDependencies></sortDependencies>
+              <!-- Sort dependencies: https://github.com/Ekryd/sortpom/wiki/SortDependencies-->
+              <sortDependencyExclusions></sortDependencyExclusions>
+              <!-- Sort dependency exclusions: https://github.com/Ekryd/sortpom/wiki/SortDependencies-->
+              <sortPlugins></sortPlugins>
+              <!-- Sort plugins: https://github.com/Ekryd/sortpom/wiki/SortPlugins -->
+              <sortProperties>false</sortProperties>
+              <!-- Sort properties -->
+              <sortModules>false</sortModules>
+              <!-- Sort modules -->
+              <sortExecutions>false</sortExecutions>
+              <!-- Sort plugin executions -->
+            </sortPom>
+          </pom>
+
+          <java>
+            <!-- These are the defaults, you can override if you want -->
+            <includes>
+              <include>src/main/java/**/*.java</include>
+              <include>src/test/java/**/*.java</include>
+            </includes>
+
+            <!-- apply a specific flavor of google-java-format and reflow long strings -->
+            <googleJavaFormat>
+              <version>${google-java-format.version}</version>
+              <style>AOSP</style>
+              <reflowLongStrings>true</reflowLongStrings>
+            </googleJavaFormat>
+
+            <importOrder>
+              <!-- or a custom ordering -->
+              <wildcardsLast>true</wildcardsLast>
+              <!-- Optional, default false. Sort wildcard import after specific imports -->
+              <order>java|javax,org,com,,com.aexp,\#,\#com.aexp</order>
+              <!-- or use <file>${project.basedir}/eclipse.importorder</file> -->
+              <!-- you can use an empty string for all the imports you didn't specify explicitly,
+                   '|' to join group without blank line, and '\#` prefix for static imports. -->
+            </importOrder>
+
+            <removeUnusedImports></removeUnusedImports>
+            <!-- self-explanatory -->
+
+            <formatAnnotations></formatAnnotations>
+            <!-- fixes formatting of type annotations, see below -->
+
+            <!-- make sure every file has the following copyright header.
+                 optionally, Spotless can set copyright years by digging
+                 through git history (see "license" section below) -->
+            <licenseHeader>
+              <content>/* (C)$YEAR */</content>
+              <!-- or <file>${project.basedir}/license-header</file> -->
+            </licenseHeader>
+          </java>
+
+          <json>
+            <includes>
+              <!-- You have to set the target manually -->
+              <include>src/**/*.json</include>
+            </includes>
+
+            <trimTrailingWhitespace></trimTrailingWhitespace>
+            <endWithNewline></endWithNewline>
+            <indent>
+              <spaces>true</spaces>
+              <spacesPerTab>4</spacesPerTab>
+            </indent>
+            <jackson>
+              <features>
+                <!-- optional: Customize the set of features (based on com.fasterxml.jackson.databind.SerializationFeature) -->
+                <INDENT_OUTPUT>true</INDENT_OUTPUT>
+                <!-- true by default -->
+                <ORDER_MAP_ENTRIES_BY_KEYS>false</ORDER_MAP_ENTRIES_BY_KEYS>
+                <!-- false by default -->
+              </features>
+            </jackson>
+          </json>
+
+          <sql>
+            <!-- You have to set the target manually -->
+            <includes>
+              <include>src/main/**/*.sql</include>
+            </includes>
+
+            <trimTrailingWhitespace></trimTrailingWhitespace>
+            <endWithNewline></endWithNewline>
+            <indent>
+              <spaces>true</spaces>
+              <spacesPerTab>4</spacesPerTab>
+            </indent>
+
+            <dbeaver>
+              <!-- optional 
+              <configFile>dbeaver.properties</configFile>
+              -->
+            </dbeaver>
+          </sql>
+
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <source>${java.release.version}</source>
+          <target>${java.release.version}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-parameters</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>false</skipTests>
+          <testFailureIgnore>true</testFailureIgnore>
+          <forkCount>0</forkCount>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+          <excludes>
+            <exclude>*Validation.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <configuration>
+          <skip>${git-commit-id-maven-plugin.skip}</skip>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <escapeString>\</escapeString>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-jar</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <outputDirectory>${project.build.directory}/appBundle</outputDirectory>
+              <resources>
+                <resource>
+                  <filtering>false</filtering>
+                  <directory>${project.build.directory}</directory>
+                  <includes>
+                    <include>*.jar</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-config</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <outputDirectory>${project.build.directory}/appBundle/.openshift</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>.openshift</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <tarLongFileMode>posix</tarLongFileMode>
+              <descriptors>
+                <descriptor>${basedir}/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>${start-class}</mainClass>
+          <excludeDevtools>false</excludeDevtools>
+        </configuration>
+        <executions>
+          <execution>
+            <id>spring-boot</id>
+            <goals>
+              <goal>build-info</goal>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- mvn -o spring-boot:run -->
+    <!-- springpr.app.id is a Maven profile name use to
+         1. designates Spring active profile when deployed to ePaaS, e.g.
+           E1: -Dspring.profiles.activ=springpr.app.id,e1
+           E2: -Dspring.profiles.activ=springpr.app.id,e2
+           E3-ipc1: -Dspring.profiles.activ=springpr.app.id,e3_ipc1
+           E3-ipc2: -Dspring.profiles.activ=springpr.app.id,e3_ipc2
+         2. as a Spring application name spring.application.name=${springpr.app.id}
+         3. as Micrometer tag for application metrics management.metrics.tags.application=${springpr.app.id}
+    -->
+    <profile>
+      <id>local</id>
+      <properties>
+        <EPAAS_ENV>e1</EPAAS_ENV>
+        <springboot.profiles>${springpr.app.id},e0</springboot.profiles>
+      </properties>
+      <build>
+        <finalName>app</finalName>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <configuration>
+              <rules>
+                <banDuplicatePomDependencyVersions></banDuplicatePomDependencyVersions>
+                <requireJavaVersion>
+                  <version>${java.compatible.versions}</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>${maven.compatible.versions}</version>
+                </requireMavenVersion>
+                <requireProperty>
+                  <property>spring-boot.version</property>
+                  <message>spring-boot.version should be defined!</message>
+                  <regex>.*\d.*</regex>
+                  <regexMessage>The spring-boot.version must contain at least one digit.</regexMessage>
+                </requireProperty>
+                <bannedPlugins>
+                  <!-- will only display a warning but does not fail the build. -->
+                  <level>WARN</level>
+                  <excludes>
+                    <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>
+                  </excludes>
+                  <message>Please consider using the maven-invoker-plugin (http://maven.apache.org/plugins/maven-invoker-plugin/)!</message>
+                </bannedPlugins>
+                <banDynamicVersions>
+                  <ignores>
+                    <ignore>package.to.be.ignored</ignore>
+                  </ignores>
+                  <allowSnapshots>${flag.allowSnapshots}</allowSnapshots>
+                  <excludedScopes>test</excludedScopes>
+                </banDynamicVersions>
+                <requireFilesExist>
+                  <files>
+                    <file>${project.basedir}/.mvn/jvm.config</file>
+                    <file>${project.basedir}/assembly.xml</file>
+                    <file>${project.basedir}/lombok.config</file>
+                    <file>${project.basedir}/helm/values_e1.yaml</file>
+                    <file>${project.basedir}/helm/values_e2.yaml</file>
+                    <file>${project.basedir}/helm/values_e3_ipc1.yaml</file>
+                    <file>${project.basedir}/helm/values_e3_ipc2.yaml</file>
+                    <file>${project.basedir}/Jenkinsfile</file>
+                  </files>
+                </requireFilesExist>
+              </rules>
+            </configuration>
+            <executions>
+              <execution>
+                <id>enforce-rules</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>server</id>
+      <properties>
+        <springboot.profiles>${springpr.app.id}</springboot.profiles>
+      </properties>
+      <build>
+        <finalName>app</finalName>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <configuration>
+              <rules>
+                <banDuplicatePomDependencyVersions></banDuplicatePomDependencyVersions>
+                <requireJavaVersion>
+                  <version>${java.compatible.versions}</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>${maven.compatible.versions}</version>
+                </requireMavenVersion>
+                <requireProperty>
+                  <property>spring-boot.version</property>
+                  <message>spring-boot.version should be defined!</message>
+                  <regex>.*\d.*</regex>
+                  <regexMessage>The spring-boot.version must contain at least one digit.</regexMessage>
+                </requireProperty>
+                <bannedPlugins>
+                  <!-- will only display a warning but does not fail the build. -->
+                  <level>WARN</level>
+                  <excludes>
+                    <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>
+                  </excludes>
+                  <message>Please consider using the maven-invoker-plugin (http://maven.apache.org/plugins/maven-invoker-plugin/)!</message>
+                </bannedPlugins>
+                <banDynamicVersions>
+                  <ignores>
+                    <ignore>package.to.be.ignored</ignore>
+                  </ignores>
+                  <allowSnapshots>${flag.allowSnapshots}</allowSnapshots>
+                  <excludedScopes>test</excludedScopes>
+                </banDynamicVersions>
+                <requireFilesExist>
+                  <files>
+                    <file>${project.basedir}/.mvn/jvm.config</file>
+                    <file>${project.basedir}/assembly.xml</file>
+                    <file>${project.basedir}/lombok.config</file>
+                    <file>${project.basedir}/helm/values_e1.yaml</file>
+                    <file>${project.basedir}/helm/values_e2.yaml</file>
+                    <file>${project.basedir}/helm/values_e3_ipc1.yaml</file>
+                    <file>${project.basedir}/helm/values_e3_ipc2.yaml</file>
+                    <file>${project.basedir}/Jenkinsfile</file>
+                  </files>
+                </requireFilesExist>
+              </rules>
+            </configuration>
+            <executions>
+              <execution>
+                <id>enforce-rules</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>lib</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <springboot.profiles>${springpr.app.id},e0</springboot.profiles>
+
+        <!-- Maven Plugins not managed by spring-boot-dependencies released:Aug 29, 2023 -->
+        <spotless-maven-plugin.version>2.39.0</spotless-maven-plugin.version>
+        <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+        <spotless-maven-plugin.skip>false</spotless-maven-plugin.skip>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>flatten-maven-plugin</artifactId>
+            <version>${flatten-maven-plugin.version}</version>
+            <configuration>
+              <updatePomFile>true</updatePomFile>
+              <flattenMode>resolveCiFriendliesOnly</flattenMode>
+            </configuration>
+            <executions>
+              <execution>
+                <id>flatten</id>
+                <goals>
+                  <goal>flatten</goal>
+                </goals>
+                <phase>process-resources</phase>
+              </execution>
+              <execution>
+                <id>flatten.clean</id>
+                <goals>
+                  <goal>clean</goal>
+                </goals>
+                <phase>clean</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <configuration>
+              <encoding>UTF-8</encoding>
+              <escapeString>\</escapeString>
+            </configuration>
+            <executions>
+              <execution>
+                <id>copy-jar</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>copy-config</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>spring-boot</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>make-assembly</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

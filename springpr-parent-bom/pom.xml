@@ -12,11 +12,10 @@
 
   <name>SpringPR Maven Parent BOM</name>
   <description>See README.md</description>
-  <!--
+
   <modules>
     <module>springpr-parent-pom</module>
   </modules>
-  -->
 
   <dependencyManagement>
     <dependencies>
